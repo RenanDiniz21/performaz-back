@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3333/docs)",
+      "Bash(curl -s http://localhost:3333/api-json)",
+      "Bash(grep -oE '\"/auth/login\"[^}]{0,500}')",
+      "Bash(grep -oE 'auth/login[^\"]{0,2000}')",
+      "Bash(grep -oE '\"/auth/login\"[^[]{0,1500}' /tmp/docs.html)",
+      "Bash(grep -oE 'id=\"api-reference\"[^>]{0,200}' /tmp/docs.html)",
+      "Bash(grep -oE '\"LoginDto\"[^}]{0,800}' /tmp/docs.html)",
+      "Bash(grep -oE '\"/api/auth/login\"[^[]{0,1500}' /tmp/docs.html)",
+      "Bash(awk '/\\\\/api\\\\/auth\\\\/login/{flag=1} flag{print; if\\(/^[[:space:]]*}[[:space:]]*,?[[:space:]]*$/\\){c++; if\\(c>=4\\) exit}}' /tmp/docs.html)",
+      "Bash(grep -oE '\"LoginDto\":\\\\s*\\\\{[^}]{0,1000}' /tmp/docs.html)",
+      "Bash(pnpm build *)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { apiReference } from "@scalar/nestjs-api-reference";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/filters/http-exception.filter";
 
@@ -20,12 +21,19 @@ async function bootstrap() {
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup("docs", app, document);
+
+	app.use(
+		"/docs",
+		apiReference({
+			content: document,
+			theme: "purple",
+		}),
+	);
 
 	const port = process.env.PORT ?? 3333;
 	await app.listen(port);
 	console.log(`🚀 Performaz API running on http://localhost:${port}/api`);
-	console.log(`📖 Swagger docs at http://localhost:${port}/docs`);
+	console.log(`📖 Scalar docs at http://localhost:${port}/docs`);
 }
 
 bootstrap();

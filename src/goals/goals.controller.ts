@@ -17,8 +17,8 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type { CreateGoalDto, UpdateGoalDto } from "./dto/goal.dto";
-import type { GoalsService } from "./goals.service";
+import { CreateGoalDto, UpdateGoalDto } from "./dto/goal.dto";
+import { GoalsService } from "./goals.service";
 
 @ApiTags("goals")
 @ApiBearerAuth()

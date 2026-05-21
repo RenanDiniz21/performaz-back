@@ -17,8 +17,8 @@ import {
 } from "@nestjs/swagger";
 import { IsEnum } from "class-validator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type { CreateOrderDto } from "./dto/order.dto";
-import type { OrdersService } from "./orders.service";
+import { CreateOrderDto } from "./dto/order.dto";
+import { OrdersService } from "./orders.service";
 
 class UpdateOrderStatusDto {
 	@ApiProperty({ enum: ["pendente", "confirmado", "cancelado"] })

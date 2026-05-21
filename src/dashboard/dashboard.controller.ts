@@ -6,7 +6,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type { DashboardService } from "./dashboard.service";
+import { DashboardService } from "./dashboard.service";
 
 @ApiTags("dashboard")
 @ApiBearerAuth()

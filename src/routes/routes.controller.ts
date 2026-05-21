@@ -20,7 +20,7 @@ import type {
 	CreateRouteDto,
 	VisitNoSaleDto,
 } from "./dto/route.dto";
-import type { RoutesService } from "./routes.service";
+import { RoutesService } from "./routes.service";
 
 @ApiTags("routes")
 @ApiBearerAuth()

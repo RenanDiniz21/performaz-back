@@ -17,8 +17,8 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type { ClientsService } from "./clients.service";
-import type { CreateClientDto, UpdateClientDto } from "./dto/client.dto";
+import { ClientsService } from "./clients.service";
+import { CreateClientDto, UpdateClientDto } from "./dto/client.dto";
 
 @ApiTags("clients")
 @ApiBearerAuth()

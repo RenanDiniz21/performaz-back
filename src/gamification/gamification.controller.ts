@@ -16,7 +16,7 @@ import {
 } from "@nestjs/swagger";
 import { IsNumber } from "class-validator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type { GamificationService } from "./gamification.service";
+import { GamificationService } from "./gamification.service";
 
 class UpdateLocationDto {
 	@ApiProperty() @IsNumber() lat: number;

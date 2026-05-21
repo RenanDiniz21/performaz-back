@@ -17,7 +17,7 @@ import type {
 	UpdateVendorDto,
 	UpdateVendorStatusDto,
 } from "./dto/vendor.dto";
-import type { VendorsService } from "./vendors.service";
+import { VendorsService } from "./vendors.service";
 
 @ApiTags("vendors")
 @ApiBearerAuth()

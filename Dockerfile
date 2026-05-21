@@ -14,16 +14,13 @@ RUN pnpm build
 # ── Stage 2: runtime ──────────────────────────────────────────────────────────
 FROM node:24-alpine AS runner
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
-
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+COPY package.json ./
 COPY drizzle.config.ts ./
-COPY --from=builder /app/src/db/schema ./src/db/schema
+COPY drizzle ./drizzle
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 
