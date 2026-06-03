@@ -6,6 +6,7 @@ export * from "./goals";
 export * from "./notifications";
 export * from "./orders";
 export * from "./products";
+export * from "./quests";
 export * from "./routes";
 export * from "./users";
 export * from "./vendors";

@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+	Inject,
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcryptjs";
@@ -6,7 +11,11 @@ import { eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { DRIZZLE } from "../db/db.module";
 import * as schema from "../db/schema";
-import type { LoginDto, VendorLoginDto } from "./dto/login.dto";
+import type {
+	ChangeVendorPasswordDto,
+	LoginDto,
+	VendorLoginDto,
+} from "./dto/login.dto";
 import type { JwtPayload } from "./strategies/jwt.strategy";
 
 const MAX_ATTEMPTS = 5;
@@ -96,6 +105,28 @@ export class AuthService {
 		} catch {
 			throw new UnauthorizedException("Refresh token inválido");
 		}
+	}
+
+	async changeVendorPassword(vendorId: string, dto: ChangeVendorPasswordDto) {
+		const [vendor] = await this.db
+			.select()
+			.from(schema.vendors)
+			.where(eq(schema.vendors.id, vendorId));
+		if (!vendor) throw new NotFoundException("Vendedor nao encontrado");
+
+		const valid = await bcrypt.compare(
+			dto.currentPassword,
+			vendor.passwordHash,
+		);
+		if (!valid) throw new UnauthorizedException("Senha atual invalida");
+
+		const passwordHash = await bcrypt.hash(dto.newPassword, 12);
+		await this.db
+			.update(schema.vendors)
+			.set({ passwordHash, updatedAt: new Date() })
+			.where(eq(schema.vendors.id, vendorId));
+
+		return { success: true };
 	}
 
 	private async generateTokens(payload: JwtPayload) {

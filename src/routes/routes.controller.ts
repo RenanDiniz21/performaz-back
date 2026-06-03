@@ -15,7 +15,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type {
+import {
 	CheckInDto,
 	CreateRouteDto,
 	VisitNoSaleDto,

@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import {
 	IsArray,
 	IsDateString,
+	IsEnum,
 	IsInt,
 	IsNotEmpty,
 	IsOptional,
@@ -40,5 +41,6 @@ export class VisitNoSaleDto {
 	@ApiProperty({
 		enum: ["cliente_fechado", "sem_interesse", "vai_comprar_depois"],
 	})
+	@IsEnum(["cliente_fechado", "sem_interesse", "vai_comprar_depois"])
 	visitReason: "cliente_fechado" | "sem_interesse" | "vai_comprar_depois";
 }

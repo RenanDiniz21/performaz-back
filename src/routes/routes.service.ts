@@ -3,11 +3,13 @@ import { and, eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { DRIZZLE } from "../db/db.module";
 import * as schema from "../db/schema";
+import { applyXpAward } from "../gamification/xp";
 import type {
 	CheckInDto,
 	CreateRouteDto,
 	VisitNoSaleDto,
 } from "./dto/route.dto";
+import { applyRouteClientVisitProgress } from "./route-progress";
 
 const XP_CHECKIN = 10;
 const XP_SALE = 50;
@@ -118,26 +120,55 @@ export class RoutesService {
 	}
 
 	async registerNoSale(routeId: string, dto: VisitNoSaleDto) {
-		const [routeClient] = await this.db
-			.select()
-			.from(schema.routeClients)
-			.where(
-				and(
-					eq(schema.routeClients.routeId, routeId),
-					eq(schema.routeClients.clientId, dto.clientId),
-				),
-			);
-		if (!routeClient)
-			throw new NotFoundException("Cliente não encontrado na rota");
+		await this.db.transaction(async (tx) => {
+			const [routeClient] = await tx
+				.select()
+				.from(schema.routeClients)
+				.where(
+					and(
+						eq(schema.routeClients.routeId, routeId),
+						eq(schema.routeClients.clientId, dto.clientId),
+					),
+				);
+			if (!routeClient)
+				throw new NotFoundException("Cliente não encontrado na rota");
 
-		await this.db
-			.update(schema.routeClients)
-			.set({
-				status: "sem_venda",
-				visitReason: dto.visitReason,
-				checkInTime: new Date(),
-			})
-			.where(eq(schema.routeClients.id, routeClient.id));
+			const [route] = await tx
+				.select({
+					visitedClients: schema.routes.visitedClients,
+					salesMade: schema.routes.salesMade,
+				})
+				.from(schema.routes)
+				.where(eq(schema.routes.id, routeId));
+			if (!route) throw new NotFoundException("Rota nao encontrada");
+
+			const progress = applyRouteClientVisitProgress({
+				currentStatus: routeClient.status,
+				targetStatus: "sem_venda",
+				visitedClients: route.visitedClients,
+				salesMade: route.salesMade,
+			});
+
+			await tx
+				.update(schema.routeClients)
+				.set({
+					status: progress.status,
+					visitReason: dto.visitReason,
+					checkInTime: new Date(),
+				})
+				.where(eq(schema.routeClients.id, routeClient.id));
+
+			if (progress.changed) {
+				await tx
+					.update(schema.routes)
+					.set({
+						visitedClients: progress.visitedClients,
+						salesMade: progress.salesMade,
+						updatedAt: new Date(),
+					})
+					.where(eq(schema.routes.id, routeId));
+			}
+		});
 
 		return { success: true };
 	}
@@ -167,10 +198,20 @@ export class RoutesService {
 		type: "checkin" | "venda" | "meta_atingida" | "conquista",
 		description: string,
 	) {
+		const [vendor] = await this.db
+			.select({ xp: schema.vendors.xp })
+			.from(schema.vendors)
+			.where(eq(schema.vendors.id, vendorId));
+
+		const xpUpdate = applyXpAward({
+			currentXp: vendor?.xp ?? 0,
+			earnedXp: xp,
+		});
+
 		await Promise.all([
 			this.db
 				.update(schema.vendors)
-				.set({ xp: schema.vendors.xp })
+				.set(xpUpdate)
 				.where(eq(schema.vendors.id, vendorId)),
 			this.db
 				.insert(schema.xpActivities)

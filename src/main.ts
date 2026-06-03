@@ -31,9 +31,9 @@ async function bootstrap() {
 	);
 
 	const port = process.env.PORT ?? 3333;
-	await app.listen(port);
-	console.log(`🚀 Performaz API running on http://localhost:${port}/api`);
-	console.log(`📖 Scalar docs at http://localhost:${port}/docs`);
+	await app.listen(port, "0.0.0.0");
+	console.log(`🚀 Performaz API running on http://0.0.0.0:${port}/api`);
+	console.log(`📖 Scalar docs at http://0.0.0.0:${port}/docs`);
 }
 
 bootstrap();

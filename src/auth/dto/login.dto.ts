@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class LoginDto {
 	@ApiProperty({ example: "gestor@performaz.com" })
@@ -29,4 +29,16 @@ export class RefreshTokenDto {
 	@IsString()
 	@IsNotEmpty()
 	refreshToken: string;
+}
+
+export class ChangeVendorPasswordDto {
+	@ApiProperty()
+	@IsString()
+	@IsNotEmpty()
+	currentPassword: string;
+
+	@ApiProperty({ minLength: 6 })
+	@IsString()
+	@MinLength(6)
+	newPassword: string;
 }

@@ -43,6 +43,19 @@ export const notificationTypeEnum = pgEnum("notification_type", [
 	"alert",
 	"route",
 ]);
+export const questTypeEnum = pgEnum("quest_type", [
+	"diaria",
+	"semanal",
+	"unica",
+]);
+export const questCategoryEnum = pgEnum("quest_category", [
+	"visitas",
+	"vendas",
+	"receita",
+	"reativacao",
+	"produto",
+	"especial",
+]);
 export const xpActivityTypeEnum = pgEnum("xp_activity_type", [
 	"checkin",
 	"venda",
