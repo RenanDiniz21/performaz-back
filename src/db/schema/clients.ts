@@ -21,6 +21,8 @@ export const clients = pgTable("clients", {
 	phone: varchar("phone", { length: 20 }).notNull(),
 	email: varchar("email", { length: 255 }).notNull(),
 	segment: varchar("segment", { length: 100 }).notNull(),
+	latitude: real("latitude"),
+	longitude: real("longitude"),
 	notes: text("notes"),
 	status: clientStatusEnum("status").notNull().default("pendente"),
 	totalOrders: integer("total_orders").notNull().default(0),

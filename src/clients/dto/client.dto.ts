@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import {
 	IsEmail,
 	IsNotEmpty,
+	IsNumber,
 	IsOptional,
 	IsString,
 	Length,
@@ -16,6 +17,8 @@ export class CreateClientDto {
 	@ApiProperty() @IsString() @IsNotEmpty() phone: string;
 	@ApiProperty() @IsEmail() email: string;
 	@ApiProperty() @IsString() @IsNotEmpty() segment: string;
+	@ApiPropertyOptional() @IsOptional() @IsNumber() latitude?: number;
+	@ApiPropertyOptional() @IsOptional() @IsNumber() longitude?: number;
 	@ApiPropertyOptional() @IsOptional() @IsString() notes?: string;
 	@ApiPropertyOptional() @IsOptional() @IsString() vendorId?: string;
 }

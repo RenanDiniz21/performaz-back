@@ -15,6 +15,13 @@
       "when": 1780419314733,
       "tag": "0001_broad_clea",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780526487576,
+      "tag": "0002_wet_sebastian_shaw",
+      "breakpoints": true
     }
   ]
 }
